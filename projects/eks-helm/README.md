@@ -28,7 +28,7 @@ TF_VAR_eks_cluster_name
 TF_VAR_region
 
 
-Please edit the bucket name on variables.tf (projects/eks/helm/my_modules/spin_S3) with a unique name of you preference.
+Please edit the bucket name on variables.tf (https://github.com/crishonsou/s3-bucket) with a unique name of you preference.
 
 
 Please edit git url on Jenkinsfile and Jenkins Pipeline configuration, pointing to you git repository.
