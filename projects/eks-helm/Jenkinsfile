@@ -1,0 +1,65 @@
+pipeline {
+	agent any
+	tools {
+	    terraform 'terraform'
+	}
+	stages{
+	    stage('Git Checkout'){
+	        steps{
+	            git branch: 'main', credentialsId: 'github-ssh', url: '.your_git_repo.git'
+	        }
+	    }
+	    stage('Set Terraform path'){
+            steps{
+                script{
+                    def tfHome = tool name: 'terraform'
+                    env.PATH = '${tfHome}:${env.PATH}'
+                }
+            }
+	    }
+        stage('Checking Terraform Path'){
+            steps{
+                withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']) {
+                    sh 'terraform -version'
+                }
+            }
+        }
+        stage('Provision Infrastructure'){
+            steps{
+                dir('projects/eks-helm'){
+                    withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
+                        sh 'echo Hello!'      		 
+                        sh 'terraform init'
+                        sh 'terraform plan -out=plan'
+                        sh 'terraform apply plan'
+                    }
+                }
+            }
+        }
+        stage('Deploying Helm v2/Tiller'){
+        	steps{
+        		dir('projects/eks-helm/tiller'){
+        			withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
+        				sh 'echo Hello!'      		 
+                        sh 'terraform init'
+                        sh 'terraform plan -out=plan'
+                        sh 'terraform apply plan'
+                    }
+        		}
+        	}
+        }
+        stage('Spinning S3 Bucket and Deploying Web-App'){
+        	steps{
+        		dir('projects/eks-helm/my_modules/spin_s3'){
+        			withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
+        			    sh 'echo Hello!'      		 
+                        sh 'terraform init'
+                        sh 'terraform plan -out=plan'
+                        sh 'terraform apply plan'
+                    }
+        		}
+        	}
+        }
+        
+	}
+}
