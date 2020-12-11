@@ -16,12 +16,19 @@ $$ VARIABLES For Jenkins > Configure System > Global Properties
 
 
 AWS_ACCESS_KEY_ID
+
 AWS_DEFAULT_REGION
+
 AWS_SECRET_ACCESS_KEY
+
 TF_VAR_bucket_name
+
 TF_VAR_eks_cluster_name
+
 TF_VAR_region
 
+
 Please edit the bucket name on variables.tf (projects/eks/helm/my_modules/spin_S3) with a unique name of you preference.
+
 
 Please edit git url on Jenkinsfile and Jenkins Pipeline configuration, pointing to you git repository.
